@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Perch · background jobs that just work</title>
+  <meta name="description" content="Define a job in your code, schedule it in plain English, and let Perch handle retries, scaling, and observability. No Redis to babysit. No cron box to SSH into." />
+  <meta name="color-scheme" content="light" />
+  <link rel="preload" href="fonts/bricolage-grotesque.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="fonts/geist.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="main.js"></script>
+</head>
+<body>
+
+  <!-- ============ Header ============ -->
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="#" aria-label="Perch home">
+        <svg class="mark" width="30" height="30" viewBox="0 0 30 30" fill="none" aria-hidden="true">
+          <rect width="30" height="30" rx="8" fill="oklch(0.86 0.17 124)"/>
+          <circle cx="12" cy="12.5" r="4" fill="oklch(0.24 0.018 130)"/>
+          <path d="M14.5 11.5 L21 9" stroke="oklch(0.24 0.018 130)" stroke-width="2" stroke-linecap="round"/>
+          <path d="M7 21 H23" stroke="oklch(0.24 0.018 130)" stroke-width="2" stroke-linecap="round"/>
+          <path d="M12 16.5 V21" stroke="oklch(0.24 0.018 130)" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        Perch
+      </a>
+      <ul class="nav-links">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#how">How it works</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#docs">Docs</a></li>
+      </ul>
+      <div class="nav-actions">
+        <a class="gh-pill" href="#gh" aria-label="Star Perch on GitHub, 12.4 thousand stars">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 .25a8 8 0 0 0-2.53 15.59c.4.07.55-.17.55-.38v-1.34c-2.22.48-2.69-1.07-2.69-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.05-.49.05-.49.8.06 1.23.83 1.23.83.71 1.22 1.87.87 2.33.66.07-.52.28-.87.5-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.83-2.15-.08-.2-.36-1.01.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.03 2.2-.82 2.2-.82.44 1.11.16 1.92.08 2.12.52.56.83 1.28.83 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.2c0 .21.15.46.55.38A8 8 0 0 0 8 .25Z"/></svg>
+          <b>12.4k</b> stars
+        </a>
+        <a class="btn btn--primary" href="#pricing">Start free</a>
+        <button class="nav-toggle" aria-label="Open menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ============ Hero ============ -->
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <span class="hero-badge reveal"><span class="dot"></span> v2.0 · now with natural-language schedules</span>
+          <h1 class="reveal" data-delay="1">Background jobs that <span class="hl">just work.</span></h1>
+          <p class="lede reveal" data-delay="2">Define a job in your code, schedule it in plain English, and let Perch handle retries, scaling, and the 3&nbsp;a.m. pages. No Redis to babysit. No cron box to SSH into.</p>
+          <div class="hero-cta reveal" data-delay="2">
+            <a class="btn btn--primary" href="#pricing">Start free <span class="arrow" aria-hidden="true">→</span></a>
+            <a class="btn btn--ghost" href="#docs">Read the docs</a>
+          </div>
+          <div class="install reveal" data-delay="3">
+            <span class="prompt" aria-hidden="true">$</span>
+            <code>npm&nbsp;i&nbsp;@perch/sdk</code>
+            <button data-copy="npm i @perch/sdk" aria-label="Copy install command">copy</button>
+          </div>
+        </div>
+
+        <div class="hero-visual reveal" data-delay="1">
+          <div class="code-card hero-mark-float">
+            <div class="chrome">
+              <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+              <span class="fname">jobs/send-digest.ts</span>
+            </div>
+<pre aria-label="Example job definition"><span class="tk-key">import</span> { job } <span class="tk-key">from</span> <span class="tk-str">"@perch/sdk"</span>;
+
+<span class="tk-key">export const</span> <span class="tk-fn">sendDigest</span> = <span class="tk-fn">job</span>({
+  name: <span class="tk-str">"send-digest"</span>,
+  every: <span class="tk-str">"weekdays at 9am"</span>,  <span class="tk-com">// plain english or cron</span>
+  retries: { attempts: <span class="tk-num">5</span>, backoff: <span class="tk-str">"exponential"</span> },
+  <span class="tk-fn">run</span>: <span class="tk-key">async</span> ({ step }) => {
+    <span class="tk-key">const</span> users = <span class="tk-key">await</span> step.<span class="tk-fn">run</span>(<span class="tk-str">"load"</span>, getActiveUsers);
+    <span class="tk-key">await</span> step.<span class="tk-fn">batch</span>(users, mailDigest);
+  },
+});</pre>
+            <div class="run-row">
+              <span class="live" aria-hidden="true"></span>
+              <span><b>send-digest</b> ran 1,204 times this week · 0 failures · p95 312ms</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Trust strip ============ -->
+    <section class="trust" aria-label="Teams using Perch">
+      <div class="container">
+        <p>Running quietly behind</p>
+        <div class="logos">
+          <span>Northwind</span>
+          <span>Lumen</span>
+          <span>Cobalt</span>
+          <span>Marigold</span>
+          <span>Fathom</span>
+          <span>Tidal</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Features ============ -->
+    <section class="section" id="features">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">why teams switch</span>
+          <h2>The queue you stop thinking about.</h2>
+          <p>Perch takes the parts of background work that bite you in production and makes them the default, not a config you forgot to set.</p>
+        </div>
+
+        <div class="features-grid">
+          <article class="feature feature--tall reveal">
+            <div class="ficon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="oklch(0.24 0.018 130)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l3-4 3 3 4-6"/></svg>
+            </div>
+            <h3>See every run, not just the failures.</h3>
+            <p>Live logs, arguments, timing, and retries for every execution, all searchable, with alerts when latency drifts. Observability isn't a paid add-on.</p>
+            <div class="mini-chart" aria-hidden="true">
+              <i style="height:38%"></i><i style="height:55%"></i><i style="height:47%"></i>
+              <i style="height:70%"></i><i style="height:62%"></i><i style="height:85%"></i>
+              <i style="height:73%"></i><i style="height:96%"></i><i style="height:80%"></i>
+            </div>
+          </article>
+
+          <article class="feature reveal" data-delay="1">
+            <div class="ficon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+            </div>
+            <h3>Retries with real backoff.</h3>
+            <p>Exponential backoff, jitter, and dead-letter handling out of the box. Set <code>attempts: 5</code> and move on. Perch won't hammer a flaky API.</p>
+          </article>
+
+          <article class="feature feature--accent reveal" data-delay="2">
+            <div class="ficon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            </div>
+            <h3>Schedule in plain English.</h3>
+            <p>“weekdays at 9am”, “every 15 minutes”, or a raw cron string if you prefer. Perch parses it, shows you the next ten runs, and warns on ambiguity.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ How it works ============ -->
+    <section class="section how" id="how">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">three steps, no yaml</span>
+          <h2>From <code>npm install</code> to running in production.</h2>
+          <p>This is the whole thing. There's no control plane to provision and no broker to operate.</p>
+        </div>
+
+        <div class="steps">
+          <article class="step reveal">
+            <div class="step-head"><span class="num">01</span><h4>Install the SDK</h4></div>
+<pre><span class="tk-com"># add it to any Node, Bun,</span>
+<span class="tk-com"># or Deno project</span>
+npm i @perch/sdk</pre>
+            <p>One dependency. It works with the framework you already have.</p>
+          </article>
+
+          <article class="step reveal" data-delay="1">
+            <div class="step-head"><span class="num">02</span><h4>Define a job</h4></div>
+<pre><span class="tk-key">export const</span> <span class="tk-fn">resize</span> =
+  <span class="tk-fn">job</span>({
+    name: <span class="tk-str">"resize"</span>,
+    <span class="tk-fn">run</span>: <span class="tk-fn">resizeImage</span>,
+  });</pre>
+            <p>Plain functions. Type-safe arguments. Test them like any other code.</p>
+          </article>
+
+          <article class="step reveal" data-delay="2">
+            <div class="step-head"><span class="num">03</span><h4>Ship it</h4></div>
+<pre>perch deploy
+
+<span class="tk-com">✓ 14 jobs registered</span>
+<span class="tk-com">✓ schedules live</span></pre>
+            <p>Perch runs your jobs on its infrastructure, scaling to zero between runs.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Pricing ============ -->
+    <section class="section" id="pricing">
+      <div class="container">
+        <div class="section-head reveal" style="margin-inline:auto;text-align:center;">
+          <span class="eyebrow" style="justify-content:center;">pricing</span>
+          <h2>Start free. Pay when it pays off.</h2>
+          <p style="margin-inline:auto;">Every plan includes retries, observability, and natural-language schedules. You only move up when your volume does.</p>
+        </div>
+
+        <div class="tiers">
+          <article class="tier reveal">
+            <h3>Hobby</h3>
+            <div class="price"><span class="amount">$0</span><span class="per">/ forever</span></div>
+            <p class="desc">For side projects and the weekend idea that might be something.</p>
+            <ul>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> 10k runs / month</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> 7-day run history</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Community support</li>
+            </ul>
+            <a class="btn btn--ghost" href="#">Get started</a>
+          </article>
+
+          <article class="tier tier--featured reveal" data-delay="1">
+            <span class="tier-tag">most popular</span>
+            <h3>Pro</h3>
+            <div class="price"><span class="amount">$29</span><span class="per">/ month</span></div>
+            <p class="desc">For products in production that need the pages to stop.</p>
+            <ul>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> 2M runs / month</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> 90-day history + alerts</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Concurrency controls</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Email + chat support</li>
+            </ul>
+            <a class="btn btn--primary" href="#">Start 14-day trial</a>
+          </article>
+
+          <article class="tier reveal" data-delay="2">
+            <h3>Scale</h3>
+            <div class="price"><span class="amount">$99</span><span class="per">/ month</span></div>
+            <p class="desc">For teams running critical work at serious volume.</p>
+            <ul>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Unlimited runs</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> 1-year history + SSO</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Dedicated regions</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> 99.99% SLA</li>
+            </ul>
+            <a class="btn btn--ghost" href="#">Talk to us</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CTA band ============ -->
+    <section class="cta-band" aria-label="Get started">
+      <div class="container cta-inner">
+        <div>
+          <h2>Your jobs are waiting. Give them somewhere to land.</h2>
+          <p>Free to start, no credit card. Your first job can be running in the next five minutes.</p>
+        </div>
+        <div class="cta-actions">
+          <a class="btn btn--primary" href="#">Create your free account <span class="arrow" aria-hidden="true">→</span></a>
+          <div class="install">
+            <span class="prompt" aria-hidden="true">$</span>
+            <code>npm&nbsp;i&nbsp;@perch/sdk</code>
+            <button data-copy="npm i @perch/sdk" aria-label="Copy install command">copy</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ Footer ============ -->
+  <footer class="site-footer" id="docs">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a class="brand" href="#" aria-label="Perch home">
+            <svg class="mark" width="30" height="30" viewBox="0 0 30 30" fill="none" aria-hidden="true">
+              <rect width="30" height="30" rx="8" fill="oklch(0.86 0.17 124)"/>
+              <circle cx="12" cy="12.5" r="4" fill="oklch(0.24 0.018 130)"/>
+              <path d="M14.5 11.5 L21 9" stroke="oklch(0.24 0.018 130)" stroke-width="2" stroke-linecap="round"/>
+              <path d="M7 21 H23" stroke="oklch(0.24 0.018 130)" stroke-width="2" stroke-linecap="round"/>
+              <path d="M12 16.5 V21" stroke="oklch(0.24 0.018 130)" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            Perch
+          </a>
+          <p>Background jobs that just work, so you can get back to building the thing people actually came for.</p>
+        </div>
+        <div class="footer-col">
+          <h5>product</h5>
+          <ul>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#how">How it works</a></li>
+            <li><a href="#">Changelog</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>developers</h5>
+          <ul>
+            <li><a href="#">Documentation</a></li>
+            <li><a href="#">API reference</a></li>
+            <li><a href="#">Examples</a></li>
+            <li><a href="#gh">GitHub</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>company</h5>
+          <ul>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Status</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Perch Labs, Inc.</span>
+        <span>Made for people who'd rather not get paged.</span>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
