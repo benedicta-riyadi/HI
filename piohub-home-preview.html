@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>pioHub — Home (preview)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  *,*::before,*::after{ box-sizing:border-box; }
+  :root{
+    --bg:#FBFAF8; --surface:#fff; --surface-2:#F4F1ED;
+    --ink:#221E1A; --muted:#6E665E; --faint:#968D83; --border:#E8E3DD;
+    --accent:#EE6C45; --accent-deep:#C24A28; --accent-soft:#FBE6DD;
+    --ease:cubic-bezier(.22,1,.36,1);
+  }
+  body{ margin:0; background:var(--bg); color:var(--ink);
+    font-family:'Manrope',system-ui,sans-serif; -webkit-font-smoothing:antialiased; }
+  .container{ width:100%; max-width:1120px; margin-inline:auto; padding-inline:clamp(20px,5vw,40px); }
+  .display{ font-family:'Fraunces',Georgia,serif; font-optical-sizing:auto; letter-spacing:-.01em; }
+  a{ text-decoration:none; }
+  svg{ display:block; }
+
+  /* preview navbar (the real app's NavBar is a separate component) */
+  .nav{ position:sticky; top:0; z-index:100; background:rgba(251,250,248,.82); backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--border); }
+  .nav-in{ display:flex; align-items:center; justify-content:space-between; height:64px; }
+  .brand{ display:flex; align-items:center; gap:9px; }
+  .logo{ width:30px;height:30px;border-radius:9px;background:var(--accent);display:flex;align-items:center;justify-content:center; }
+  .brand b{ font-family:'Fraunces',serif; font-weight:600; font-size:18px; }
+  .nav-right{ display:flex; align-items:center; gap:8px; }
+
+  .eyebrow{ display:inline-flex; align-items:center; gap:8px; border:1px solid var(--border);
+    background:var(--surface); border-radius:9999px; padding:6px 14px; font-size:13px; font-weight:600;
+    color:var(--muted); margin-bottom:26px; }
+  .h1{ font-size:clamp(38px,5.4vw,64px); font-weight:600; line-height:1.02; margin:0; text-wrap:balance; }
+  .mark-wrap{ position:relative; display:inline; white-space:nowrap; }
+  .mark{ position:absolute; left:-.06em; right:-.06em; bottom:.08em; height:.46em; z-index:0;
+    background:var(--accent-soft); border-radius:3px; transform:scaleX(0); transform-origin:left center; }
+  .mark-text{ position:relative; z-index:1; color:var(--accent-deep); }
+  .lead{ font-size:clamp(16px,1.6vw,19px); color:var(--muted); line-height:1.7; margin:22px 0 0; max-width:60ch; text-wrap:pretty; }
+  .lead-sm{ font-size:16px; color:var(--muted); line-height:1.65; max-width:54ch; }
+
+  .btn{ display:inline-flex; align-items:center; justify-content:center; gap:8px; cursor:pointer;
+    font-family:'Manrope',sans-serif; font-weight:600; font-size:15px; padding:13px 26px; border-radius:12px;
+    border:1.5px solid transparent; white-space:nowrap;
+    transition:transform .18s var(--ease), box-shadow .18s var(--ease), background .18s, border-color .18s, color .18s; }
+  .btn-sm{ font-size:13px; padding:8px 16px; border-radius:10px; }
+  .btn-primary{ background:var(--accent); color:var(--ink); box-shadow:0 1px 2px rgba(34,30,26,.06); }
+  .btn-primary:hover{ background:#F07A55; transform:translateY(-2px); box-shadow:0 10px 24px rgba(238,108,69,.30); }
+  .btn-outline{ background:var(--surface); color:var(--ink); border-color:var(--border); }
+  .btn-outline:hover{ border-color:var(--accent); color:var(--accent-deep); transform:translateY(-2px); }
+  .btn-ink{ background:var(--ink); color:#fff; }
+  .btn-ink:hover{ background:#000; transform:translateY(-2px); box-shadow:0 10px 24px rgba(0,0,0,.18); }
+  .btn .arrow{ transition:transform .2s var(--ease); }
+  .btn:hover .arrow{ transform:translateX(2px); }
+
+  .tag{ display:inline-flex; align-items:center; gap:5px; border:1px solid; border-radius:9999px;
+    font-size:12px; font-weight:600; padding:4px 12px; transition:transform .15s var(--ease); }
+  .tag-sm{ font-size:10px; padding:2px 9px; }
+  .tag:hover{ transform:translateY(-2px); }
+
+  /* hero */
+  .hero-grid{ display:grid; gap:64px 48px; align-items:center; padding-block:clamp(56px,8vw,96px); }
+  @media(min-width:1024px){ .hero-grid{ grid-template-columns:1.05fr .95fr; } }
+  .hero-art{ position:relative; min-height:320px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:18px; }
+  .card{ background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:18px 20px;
+    box-shadow:0 18px 48px rgba(34,30,26,.10); width:min(320px,86%); }
+  .card-title{ font-size:15px; font-weight:600; color:var(--ink); line-height:1.3; margin:0; }
+  .meta{ font-size:11px; color:var(--faint); }
+  .row{ display:flex; }
+  .between{ justify-content:space-between; }
+  .float-1{ transform:rotate(-2deg); }
+  .float-2{ transform:rotate(2deg) translateX(8%); margin-top:-6px; }
+
+  /* stats */
+  .band{ border-block:1px solid var(--border); background:var(--surface-2); }
+  .stats{ display:grid; grid-template-columns:1fr; gap:28px; max-width:640px; margin-inline:auto; text-align:center; padding-block:30px; }
+  @media(min-width:640px){ .stats{ grid-template-columns:repeat(3,1fr); gap:24px; text-align:left; } }
+  .stat-value{ font-size:30px; font-weight:600; line-height:1; }
+  .stat-label{ font-size:14px; color:var(--muted); margin-top:6px; }
+
+  /* features bento */
+  .h2{ font-size:clamp(28px,3.6vw,40px); font-weight:600; line-height:1.08; margin:0; }
+  .bento{ display:grid; grid-template-columns:1fr; gap:16px; }
+  @media(min-width:1024px){ .bento{ grid-template-columns:repeat(3,1fr); } }
+  .feature{ background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:24px;
+    transition:border-color .2s, box-shadow .2s, transform .2s var(--ease); }
+  .feature.hov:hover{ border-color:var(--accent); transform:translateY(-3px); box-shadow:0 14px 36px rgba(34,30,26,.08); }
+  .feature-lead{ background:var(--accent-soft); border-color:#F6D3C6; padding:30px; display:flex; flex-direction:column; }
+  @media(min-width:1024px){ .feature-lead{ grid-row:span 3; } .feature.wide{ grid-column:2 / span 2; } }
+  .ficon{ display:inline-flex; align-items:center; justify-content:center; width:42px; height:42px;
+    border-radius:11px; background:var(--accent-soft); color:var(--accent-deep); margin-bottom:14px; }
+  .ficon-lead{ background:var(--accent); color:var(--ink); width:48px; height:48px; }
+  .ftitle{ font-size:16px; font-weight:600; color:var(--ink); margin:0; }
+  .ftitle-lead{ font-size:24px; font-weight:600; color:var(--ink); margin:6px 0 0; line-height:1.15; }
+  .fdesc{ font-size:14px; color:var(--muted); line-height:1.65; margin:10px 0 0; }
+  .feature-lead .fdesc{ font-size:15px; margin-top:auto; padding-top:14px; }
+
+  /* how it works */
+  .band-soft{ background:var(--surface-2); border-block:1px solid var(--border); }
+  .steps{ position:relative; display:grid; grid-template-columns:1fr; gap:40px; max-width:960px; margin-inline:auto; }
+  @media(min-width:640px){ .steps{ grid-template-columns:repeat(3,1fr); gap:24px; } }
+  .track{ position:absolute; top:23px; left:16%; right:16%; height:2px; background:var(--border);
+    transform:scaleX(0); transform-origin:left center; z-index:0; }
+  @media(max-width:639px){ .track{ display:none; } }
+  .step{ position:relative; z-index:1; text-align:center; }
+  .step-num{ display:inline-flex; align-items:center; justify-content:center; width:48px; height:48px;
+    border-radius:9999px; background:var(--accent); color:var(--ink);
+    font-family:'JetBrains Mono',monospace; font-weight:500; font-size:15px; margin-bottom:16px;
+    border:3px solid var(--surface-2); box-shadow:0 0 0 1px var(--accent); }
+  .step-title{ font-size:17px; font-weight:600; margin:0 0 6px; }
+  .step-desc{ font-size:14px; color:var(--muted); line-height:1.6; margin:0; }
+
+  /* cta */
+  .cta{ background:var(--accent); border-radius:24px; padding:clamp(36px,6vw,64px); text-align:center;
+    display:flex; flex-direction:column; align-items:center; }
+  .cta-title{ font-size:clamp(26px,3.6vw,42px); font-weight:600; color:var(--ink); line-height:1.1; margin:0; max-width:18ch; text-wrap:balance; }
+  .cta-sub{ font-size:17px; color:#7a3a22; margin:14px 0 24px; }
+
+  /* footer */
+  .footer{ border-top:1px solid var(--border); }
+  .footer-in{ display:flex; flex-direction:column; align-items:center; justify-content:space-between; gap:16px; padding-block:28px; }
+  @media(min-width:640px){ .footer-in{ flex-direction:row; } }
+
+  /* ── motion ── */
+  @keyframes rise{ from{ opacity:0; transform:translateY(16px);} to{ opacity:1; transform:none;} }
+  @keyframes swipe{ from{ transform:scaleX(0);} to{ transform:scaleX(1);} }
+  @keyframes floatA{ 0%,100%{ transform:rotate(-2deg) translateY(0);} 50%{ transform:rotate(-2deg) translateY(-7px);} }
+  @keyframes floatB{ 0%,100%{ transform:rotate(2deg) translateX(8%) translateY(0);} 50%{ transform:rotate(2deg) translateX(8%) translateY(7px);} }
+  @keyframes pop{ from{ opacity:0; transform:translateY(8px) scale(.96);} to{ opacity:1; transform:none;} }
+  .enter{ animation:rise .7s var(--ease) both; animation-delay:calc(var(--i,0)*90ms); }
+  .mark{ animation:swipe .55s var(--ease) both; animation-delay:.62s; }
+  .pop{ animation:pop .5s var(--ease) both; animation-delay:calc(.45s + var(--i,0)*45ms); }
+  .float-1{ animation:floatA 7s ease-in-out 1.2s infinite; }
+  .float-2{ animation:floatB 8s ease-in-out 1.4s infinite; }
+
+  .js-motion .reveal{ opacity:0; }
+  .js-motion .step.reveal{ transform:translateY(18px); transition:opacity .6s var(--ease), transform .6s var(--ease); transition-delay:calc(var(--i,0)*110ms); }
+  .js-motion .track.reveal{ transition:transform .7s var(--ease) .15s, opacity .3s; }
+  .js-motion .step.reveal.in{ opacity:1; transform:none; }
+  .js-motion .track.reveal.in{ opacity:1; transform:scaleX(1); }
+  @media(max-width:640px){ .float-1,.float-2{ transform:none; } }
+
+  @media (prefers-reduced-motion: reduce){
+    .enter,.mark,.pop,.float-1,.float-2{ animation:none; }
+    .mark{ transform:scaleX(1); }
+    *{ transition-duration:.01ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- preview navbar -->
+<nav class="nav"><div class="container nav-in">
+  <div class="brand"><span class="logo"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 13V8.5M8 13V3M13 13V6" stroke="#221E1A" stroke-width="2.2" stroke-linecap="round"/></svg></span><b>pioHub</b></div>
+  <div class="nav-right">
+    <a class="btn btn-outline btn-sm">Browse Projects</a>
+    <a class="btn btn-primary btn-sm">Sign in</a>
+  </div>
+</div></nav>
+
+<!-- HERO -->
+<section><div class="container hero-grid">
+  <div>
+    <div class="eyebrow enter" style="--i:0">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M22 10L12 5 2 10l10 5 10-5z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M6 12v5c0 1 2.7 2.5 6 2.5s6-1.5 6-2.5v-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      For students who want to build
+    </div>
+    <h1 class="display h1 enter" style="--i:1">Start something. <span class="mark-wrap"><span class="mark"></span><span class="mark-text">Or join someone who did.</span></span></h1>
+    <p class="lead enter" style="--i:2">You don't need a perfect plan — that's what the team is for. pioHub connects students with complementary skills and the same commitment, so every idea gets the people it needs and every builder gets a place to start.</p>
+    <div class="row enter" style="--i:3; gap:12px; margin-top:36px; flex-wrap:wrap;">
+      <a class="btn btn-primary">Start a project <svg class="arrow" width="16" height="16" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="#221E1A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a class="btn btn-outline">Join a project</a>
+    </div>
+    <div class="row enter" id="roles" style="--i:4; gap:8px; margin-top:48px; flex-wrap:wrap;"></div>
+  </div>
+
+  <div class="hero-art enter" style="--i:3" aria-hidden="true">
+    <div class="card float-1" style="border-color:var(--accent);">
+      <div class="row between" style="align-items:flex-start; gap:12px;">
+        <h4 class="card-title" style="color:var(--accent-deep);">Campus food-waste tracker</h4>
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0;margin-top:2px;"><path d="M2 7h10M8 3l4 4-4 4" stroke="#C24A28" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="row between meta" style="margin-top:6px;"><span>by James R.</span><span>5h ago</span></div>
+      <div class="row" style="flex-wrap:wrap; gap:6px; margin-top:12px;">
+        <span class="tag tag-sm" style="background:#E5F0FC;color:#2563B0;border-color:#C5DDF5;">Frontend</span>
+        <span class="tag tag-sm" style="background:#FBE6DD;color:#C24A28;border-color:#F6D3C6;">DevOps</span>
+      </div>
+      <div class="meta" style="margin-top:12px;">2 / 4 members</div>
+    </div>
+    <div class="card float-2">
+      <div class="row between" style="align-items:flex-start; gap:12px;">
+        <h4 class="card-title">AI study-buddy for lecture notes</h4>
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0;margin-top:2px;"><path d="M2 7h10M8 3l4 4-4 4" stroke="#968D83" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="row between meta" style="margin-top:6px;"><span>by Maya K.</span><span>2h ago</span></div>
+      <div class="row" style="flex-wrap:wrap; gap:6px; margin-top:12px;">
+        <span class="tag tag-sm" style="background:#EFEAFB;color:#6D4FCB;border-color:#DCD2F4;">Backend</span>
+        <span class="tag tag-sm" style="background:#FCE7F0;color:#B23A6E;border-color:#F6CBDD;">Designer</span>
+        <span class="tag tag-sm" style="background:#E6F5EC;color:#1F7A4D;border-color:#C8E9D6;">ML</span>
+      </div>
+      <div class="meta" style="margin-top:12px;">1 / 5 members</div>
+    </div>
+  </div>
+</div></section>
+
+<!-- STATS -->
+<section class="band"><div class="container"><div class="stats">
+  <div><div class="display stat-value">1 idea</div><div class="stat-label">is enough to start</div></div>
+  <div><div class="display stat-value">2 min</div><div class="stat-label">from idea to posted project</div></div>
+  <div><div class="display stat-value">$0</div><div class="stat-label">free for every student</div></div>
+</div></div></section>
+
+<!-- FEATURES -->
+<section class="container" style="padding-block:clamp(64px,9vw,112px);">
+  <div style="max-width:640px; margin-bottom:48px;">
+    <h2 class="display h2">Made for starting</h2>
+    <p class="lead-sm" style="margin-top:12px;">Every part of pioHub exists to shrink the gap between “I have an idea” and “we're building it.”</p>
+  </div>
+  <div class="bento">
+    <article class="feature feature-lead">
+      <div class="ficon ficon-lead"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 3l9 5-9 5-9-5 9-5z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M3 12l9 5 9-5M3 16l9 5 9-5" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></div>
+      <h3 class="display ftitle-lead">Post the idea you keep thinking about</h3>
+      <p class="fdesc">Write it down, say who you need. That already counts as starting — the team comes to you.</p>
+    </article>
+    <article class="feature wide hov">
+      <div class="row" style="gap:16px; align-items:flex-start;">
+        <div class="ficon" style="flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3.2" stroke="currentColor" stroke-width="1.6"/><path d="M3 19c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M16 6.5a3 3 0 010 5.5M19 19c0-2.5-1-4.3-2.8-5.2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+        <div><h3 class="ftitle">Join with what you have</h3><p class="fdesc" style="margin-top:6px;">Designer, coder, writer, organizer. Every project needs more than one kind of mind — bring yours.</p></div>
+      </div>
+    </article>
+    <article class="feature wide hov">
+      <div class="row" style="gap:16px; align-items:flex-start;">
+        <div class="ficon" style="flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M5 15c-2 1-2 5-2 5s4 0 5-2m9.5-13.5c-3 .5-6 2.5-8 5l-1.5 3 3-1.5c2.5-2 4.5-5 5-8z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></div>
+        <div><h3 class="ftitle">Build with committed people</h3><p class="fdesc" style="margin-top:6px;">Owners approve who joins, so teams are made of people who actually want to be there.</p></div>
+      </div>
+    </article>
+    <article class="feature wide hov">
+      <div class="row" style="gap:16px; align-items:flex-start;">
+        <div class="ficon" style="flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 3l2.6 5.3 5.9.9-4.2 4.1 1 5.8L12 16.9 6.7 19.2l1-5.8L3.5 9.2l5.9-.9L12 3z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></div>
+        <div><h3 class="ftitle">Finish things you can point to</h3><p class="fdesc" style="margin-top:6px;">Every project lives on your profile. Proof that you don't just plan — you try.</p></div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="band-soft" style="padding-block:clamp(64px,8vw,96px);"><div class="container">
+  <h2 class="display h2" style="text-align:center; margin-bottom:56px;">How it works</h2>
+  <div class="steps">
+    <div class="track reveal"></div>
+    <div class="step reveal" style="--i:0"><div class="step-num">01</div><h3 class="step-title">Make a profile</h3><p class="step-desc">Say what you can do and what you care about.</p></div>
+    <div class="step reveal" style="--i:1"><div class="step-num">02</div><h3 class="step-title">Start or join</h3><p class="step-desc">Post the idea you've been sitting on, or find one that needs you.</p></div>
+    <div class="step reveal" style="--i:2"><div class="step-num">03</div><h3 class="step-title">Build together</h3><p class="step-desc">Meet your team, set up your workspace, make it real.</p></div>
+  </div>
+</div></section>
+
+<!-- CTA -->
+<section class="container" style="padding-block:clamp(64px,9vw,112px);">
+  <div class="cta">
+    <h2 class="display cta-title">What would you build if you had the team?</h2>
+    <p class="cta-sub">Find out. It's free, and starting takes two minutes.</p>
+    <a class="btn btn-ink" style="margin-top:8px;">Start building <svg class="arrow" width="16" height="16" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer"><div class="container footer-in">
+  <div class="row" style="align-items:center; gap:8px; color:var(--muted); font-size:13px;">
+    <span class="logo" style="width:24px;height:24px;border-radius:7px;"><svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M3 13V8.5M8 13V3M13 13V6" stroke="#221E1A" stroke-width="2.2" stroke-linecap="round"/></svg></span>
+    <span class="display" style="font-weight:600; font-size:16px;">pioHub</span>
+    <span class="meta">— Student Collaboration Platform</span>
+  </div>
+  <p class="meta">© 2026 pioNox. All rights reserved.</p>
+</div></footer>
+
+<script>
+  // role tags
+  const roles = [
+    ["⚡","Frontend","#E5F0FC","#2563B0","#C5DDF5"],["🔧","Backend","#EFEAFB","#6D4FCB","#DCD2F4"],
+    ["🎨","Designer","#FCE7F0","#B23A6E","#F6CBDD"],["📊","Data Science","#E6F5EC","#1F7A4D","#C8E9D6"],
+    ["☁️","DevOps","#FBE6DD","#C24A28","#F6D3C6"],["📱","Mobile","#E2F4F4","#138080","#C2E8E8"],
+    ["🗺️","Product","#FBF1DC","#8A5A12","#F0E0B8"],["🔬","Research","#EFEAFB","#5B43B0","#DCD2F4"],
+  ];
+  const wrap = document.getElementById('roles');
+  roles.forEach(([e,l,bg,t,bd],i)=>{
+    const s=document.createElement('span'); s.className='tag pop';
+    s.style.cssText=`background:${bg};color:${t};border-color:${bd};--i:${i}`;
+    s.innerHTML=`<span>${e}</span>${l}`; wrap.appendChild(s);
+  });
+
+  // scroll reveal (how it works only) — enhances an already-visible default
+  if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    document.body.classList.add('js-motion');
+    const io=new IntersectionObserver((es,o)=>es.forEach(en=>{ if(en.isIntersecting){ en.target.classList.add('in'); o.unobserve(en.target);} }),{threshold:.18,rootMargin:'0px 0px -40px 0px'});
+    const t=document.querySelectorAll('.reveal'); t.forEach(el=>io.observe(el));
+    setTimeout(()=>t.forEach(el=>el.classList.add('in')),1800);
+  }
+</script>
+</body>
+</html>

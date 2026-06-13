@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>pioHub — Design System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root{
+      /* ── canvas & ink ── */
+      --bg:        #FBFAF8;   /* soft near-white — not cream, just air */
+      --surface:   #FFFFFF;   /* card / panel */
+      --surface-2: #F4F1ED;   /* inset / code chrome */
+      --ink:       #221E1A;   /* headings + strong body (~14:1 on white) */
+      --muted:     #6E665E;   /* secondary text (≥4.5:1) */
+      --faint:     #968D83;   /* tertiary / meta */
+      --border:    #E8E3DD;   /* hairlines */
+
+      /* ── signature: persimmon ── */
+      --accent:      #EE6C45; /* brand fill — pairs with ink text */
+      --accent-deep: #C24A28; /* links / hover / accent text on white (≥4.5:1) */
+      --accent-soft: #FBE6DD; /* tint surface */
+      --accent-ring: rgba(238,108,69,.28);
+
+      /* ── semantic ── */
+      --destructive:     #D23B2E; /* crimson — distinct from persimmon */
+      --destructive-soft:#FCEAE8;
+      --destructive-bd:  #F4CCC8;
+
+      /* ── radius ── */
+      --r-sm: 6px;  --r-md: 10px; --r-lg: 12px;
+      --r-xl: 14px; --r-2xl: 16px; --r-full: 9999px;
+
+      /* ── elevation (defined, never border+wide-shadow at rest) ── */
+      --sh-sm: 0 1px 2px rgba(34,30,26,.05);
+      --sh-md: 0 8px 24px rgba(34,30,26,.08);
+      --sh-lg: 0 18px 48px rgba(34,30,26,.12);
+
+      /* ── type ── */
+      --font-display: 'Fraunces', Georgia, serif;
+      --font-ui: 'Manrope', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+      /* ── z-index scale ── */
+      --z-sticky: 100; --z-dropdown: 200; --z-modal: 400; --z-toast: 600; --z-tooltip: 800;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin:0; background: var(--bg); color: var(--ink);
+      font-family: var(--font-ui); font-size:14px; line-height:1.6;
+      -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+    }
+
+    /* ── headings ── */
+    .display { font-family: var(--font-display); font-optical-sizing:auto; font-weight:600; color:var(--ink); letter-spacing:-.01em; text-wrap:balance; }
+
+    /* ── section label (real taxonomy, not decorative eyebrow) ── */
+    .ds-label {
+      font-family: var(--font-mono); font-size:11px; font-weight:500;
+      letter-spacing:.04em; text-transform:uppercase; color:var(--accent-deep);
+      margin:0 0 20px; padding-bottom:10px; border-bottom:1px solid var(--border);
+      display:flex; align-items:baseline; gap:10px;
+    }
+    .ds-label::before{ content:""; width:7px; height:7px; border-radius:2px; background:var(--accent); transform:translateY(-1px); }
+
+    /* ── card base ── */
+    .ds-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--r-2xl); padding:28px; box-shadow:var(--sh-sm); }
+
+    .micro { font-family:var(--font-mono); font-size:10px; letter-spacing:.03em; color:var(--faint); text-transform:uppercase; margin-bottom:14px; }
+
+    /* ── token strip ── */
+    .swatch { width:60px; height:60px; border-radius:12px; border:1px solid rgba(34,30,26,.07); }
+
+    /* ── BUTTONS ── */
+    .btn { display:inline-flex; align-items:center; justify-content:center; gap:7px; font-family:var(--font-ui); font-weight:600; border-radius:var(--r-md); border:none; cursor:pointer; transition:transform .18s cubic-bezier(.2,.8,.2,1), background .18s, box-shadow .18s, border-color .18s, color .18s; white-space:nowrap; }
+    .btn:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+    .btn:disabled { opacity:.45; pointer-events:none; }
+
+    .btn-default { background:var(--accent); color:var(--ink); box-shadow:var(--sh-sm); }
+    .btn-default:hover { background:#F07A55; transform:translateY(-1px); box-shadow:0 6px 18px var(--accent-ring); }
+    .btn-default:active { transform:translateY(0); }
+
+    .btn-outline { background:var(--surface); color:var(--ink); border:1.5px solid var(--border); }
+    .btn-outline:hover { border-color:var(--accent); color:var(--accent-deep); }
+
+    .btn-ghost { background:transparent; color:var(--muted); }
+    .btn-ghost:hover { background:var(--surface-2); color:var(--ink); }
+
+    .btn-destructive { background:var(--destructive); color:#fff; }
+    .btn-destructive:hover { background:#B82F24; }
+
+    .btn-secondary { background:var(--accent-soft); color:var(--accent-deep); border:1.5px solid transparent; }
+    .btn-secondary:hover { background:#F8D8CB; }
+
+    .btn-sm  { font-size:12px; padding:7px 14px; border-radius:var(--r-sm); }
+    .btn-md  { font-size:13px; padding:9px 18px; }
+    .btn-lg  { font-size:15px; padding:12px 26px; border-radius:var(--r-lg); }
+    .btn-icon{ padding:8px; border-radius:var(--r-md); }
+
+    /* ── INPUTS ── */
+    .inp { display:flex; width:100%; border-radius:var(--r-md); border:1.5px solid var(--border); background:var(--surface); padding:10px 14px; font-size:13px; font-family:var(--font-ui); color:var(--ink); transition:border-color .15s, box-shadow .15s; outline:none; }
+    .inp::placeholder { color:var(--muted); }
+    .inp:focus { border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-ring); }
+    .inp-error { border-color:var(--destructive); }
+    .inp-error:focus { box-shadow:0 0 0 3px var(--destructive-soft); }
+    .inp-disabled { opacity:.6; pointer-events:none; background:var(--surface-2); }
+    textarea.inp { min-height:92px; resize:none; line-height:1.6; }
+
+    /* ── BADGES ── */
+    .badge { display:inline-flex; align-items:center; gap:5px; border-radius:var(--r-full); font-size:11px; font-weight:600; font-family:var(--font-ui); padding:3px 11px; border:1px solid transparent; }
+
+    /* ── ROLE TAGS — one harmonized tint formula ── */
+    .role-tag { display:inline-flex; align-items:center; gap:4px; border-radius:var(--r-full); font-size:11px; font-weight:600; font-family:var(--font-ui); padding:3px 11px; border:1px solid; transition:transform .15s cubic-bezier(.2,.8,.2,1); }
+    .role-tag:hover { transform:translateY(-1px); }
+
+    /* ── CARD variants ── */
+    .project-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--r-2xl); padding:22px; transition:border-color .2s, box-shadow .2s, transform .2s cubic-bezier(.2,.8,.2,1); cursor:pointer; box-shadow:var(--sh-sm); }
+    .project-card:hover { border-color:var(--accent); box-shadow:var(--sh-md); transform:translateY(-3px); }
+
+    /* ── AVATAR ── */
+    .avatar-ring { border:2.5px solid var(--surface); border-radius:var(--r-full); display:flex; align-items:center; justify-content:center; font-family:var(--font-ui); font-weight:700; color:#fff; background:var(--ink); overflow:hidden; box-shadow:var(--sh-sm); }
+
+    /* ── NAV ── */
+    .nav-demo { background:rgba(251,250,248,.8); backdrop-filter:blur(14px); border:1px solid var(--border); }
+
+    /* ── TOAST ── */
+    .toast { background:var(--surface); border:1px solid var(--border); border-radius:var(--r-xl); padding:14px 18px; box-shadow:var(--sh-md); display:flex; align-items:flex-start; gap:12px; max-width:340px; }
+
+    /* ── SKELETON ── */
+    @keyframes shimmer { 0%{background-position:-400px 0} 100%{background-position:400px 0} }
+    .skeleton { background:linear-gradient(90deg, #EFEBE5 25%, #E4DED6 50%, #EFEBE5 75%); background-size:800px 100%; animation:shimmer 1.4s ease infinite; border-radius:var(--r-sm); }
+
+    /* ── DROPDOWN ── */
+    .dropdown { background:var(--surface); border:1px solid var(--border); border-radius:var(--r-xl); box-shadow:var(--sh-lg); padding:6px; min-width:208px; }
+    .dropdown-item { display:flex; align-items:center; gap:9px; padding:8px 12px; border-radius:var(--r-sm); font-size:13px; color:var(--ink); cursor:pointer; transition:background .12s, color .12s; font-family:var(--font-ui); }
+    .dropdown-item:hover { background:var(--accent-soft); color:var(--accent-deep); }
+    .dropdown-item.danger { color:var(--destructive); }
+    .dropdown-item.danger:hover { background:var(--destructive-soft); color:#B82F24; }
+    .dropdown-sep { height:1px; background:var(--border); margin:5px 0; }
+
+    /* ── DIALOG ── */
+    .dialog-overlay { background:rgba(34,30,26,.42); backdrop-filter:blur(3px); position:fixed; inset:0; z-index:var(--z-modal); display:flex; align-items:center; justify-content:center; }
+    .dialog-box { background:var(--surface); border:1px solid var(--border); border-radius:var(--r-2xl); padding:28px; max-width:460px; width:100%; box-shadow:var(--sh-lg); position:relative; }
+
+    /* ── TABS ── */
+    .tabs-list { display:inline-flex; background:var(--surface-2); border-radius:var(--r-md); padding:4px; gap:3px; }
+    .tab-trigger { font-family:var(--font-ui); font-size:12px; font-weight:600; padding:7px 16px; border-radius:var(--r-sm); border:none; cursor:pointer; background:transparent; color:var(--muted); transition:all .15s; }
+    .tab-trigger.active { background:var(--surface); color:var(--ink); box-shadow:var(--sh-sm); }
+
+    /* ── TOOLTIP ── */
+    .tooltip-box { background:var(--ink); color:#F7F4F0; font-size:11px; font-family:var(--font-ui); font-weight:500; padding:6px 11px; border-radius:var(--r-sm); white-space:nowrap; box-shadow:var(--sh-md); }
+
+    /* ── SEPARATOR ── */
+    .sep-h { height:1px; background:var(--border); width:100%; }
+    .sep-v { width:1px; background:var(--border); height:100%; }
+
+    /* ── STAT TILE ── */
+    .stat-tile { background:var(--surface); border:1px solid var(--border); border-radius:var(--r-2xl); padding:18px 20px; box-shadow:var(--sh-sm); }
+
+    /* ── NAV LINK (in-page navbar demo) ── */
+    .nav-link { font-family:var(--font-ui); font-size:13px; font-weight:600; padding:7px 14px; border-radius:var(--r-md); color:var(--muted); transition:all .15s; text-decoration:none; }
+    .nav-link:hover { background:var(--surface-2); color:var(--ink); }
+    .nav-link.active { background:var(--ink); color:#fff; }
+
+    /* ── EMPTY STATE ── */
+    .empty-icon { width:60px; height:60px; border-radius:var(--r-xl); background:var(--surface); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; margin:0 auto 16px; box-shadow:var(--sh-sm); }
+
+    /* ── FORM ── */
+    .form-label { font-family:var(--font-ui); font-size:12px; font-weight:600; color:var(--ink); margin-bottom:7px; display:block; }
+    .form-hint  { font-size:11px; color:var(--muted); margin-top:5px; }
+    .form-error { font-size:11px; color:var(--destructive); margin-top:5px; font-weight:500; }
+
+    /* ── PROGRESS ── */
+    .progress-track { height:8px; background:var(--surface-2); border-radius:var(--r-full); overflow:hidden; }
+    .progress-fill  { height:100%; background:var(--accent); border-radius:var(--r-full); transition:width .5s cubic-bezier(.2,.8,.2,1); }
+
+    /* ── SIDEBAR NAV ── */
+    .ds-nav-group { font-family:var(--font-mono); font-size:9px; font-weight:500; letter-spacing:.12em; text-transform:uppercase; color:var(--faint); padding:0 10px; margin:18px 0 6px; }
+    .ds-nav-group:first-of-type { margin-top:0; }
+    .ds-nav-item { display:flex; align-items:center; font-family:var(--font-ui); font-size:12.5px; font-weight:500; text-decoration:none; color:var(--muted); padding:6px 10px; border-radius:var(--r-sm); transition:background .14s, color .14s; }
+    .ds-nav-item:hover { color:var(--ink); background:var(--surface-2); }
+    .ds-nav-item.active { color:var(--accent-deep); background:var(--accent-soft); font-weight:600; }
+
+    /* ── section reveal (enhances an already-visible default) ── */
+    .reveal { opacity:1; transform:none; }
+    .js-motion .reveal { opacity:0; transform:translateY(14px); transition:opacity .6s cubic-bezier(.2,.8,.2,1), transform .6s cubic-bezier(.2,.8,.2,1); }
+    .js-motion .reveal.in { opacity:1; transform:none; }
+
+    /* ── scrollbar ── */
+    ::-webkit-scrollbar { width:8px; height:8px; }
+    ::-webkit-scrollbar-track { background:transparent; }
+    ::-webkit-scrollbar-thumb { background:var(--border); border-radius:var(--r-full); }
+    ::-webkit-scrollbar-thumb:hover { background:#D8D1C8; }
+
+    @keyframes spin { to { transform:rotate(360deg); } }
+    @keyframes rise { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:none; } }
+    .masthead-anim { animation:rise .7s cubic-bezier(.2,.8,.2,1) both; }
+
+    /* ── responsive ── */
+    @media (max-width: 880px){
+      .layout { flex-direction:column; }
+      aside.sidebar { position:static; width:100%; height:auto; border-right:none; border-bottom:1px solid var(--border); }
+      .sidebar-links { flex-direction:row; flex-wrap:wrap; gap:4px; }
+      .ds-nav-group { width:100%; }
+      main.main { padding:32px 22px 64px; }
+      .two-col { grid-template-columns:1fr !important; }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      html { scroll-behavior:auto; }
+      *, *::before, *::after { animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; }
+      .js-motion .reveal { opacity:1; transform:none; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="layout" style="display:flex; min-height:100vh;">
+
+  <!-- ════════ SIDEBAR ════════ -->
+  <aside class="sidebar" style="width:208px; flex-shrink:0; position:sticky; top:0; height:100vh; overflow-y:auto; padding:28px 16px; border-right:1px solid var(--border); background:var(--surface); z-index:var(--z-sticky);">
+    <div style="display:flex; align-items:center; gap:9px; margin-bottom:26px; padding:0 6px;">
+      <div style="width:30px;height:30px;border-radius:9px;background:var(--accent);display:flex;align-items:center;justify-content:center;">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 13V8.5M8 13V3M13 13V6" stroke="#221E1A" stroke-width="2.2" stroke-linecap="round"/></svg>
+      </div>
+      <span style="font-family:var(--font-display);font-weight:600;font-size:17px;color:var(--ink);letter-spacing:-.01em;">pioHub</span>
+    </div>
+    <nav class="sidebar-links" style="display:flex;flex-direction:column;gap:1px;">
+      <div class="ds-nav-group">Foundations</div>
+      <a class="ds-nav-item active" href="#tokens">Tokens</a>
+      <a class="ds-nav-item" href="#typography">Typography</a>
+      <div class="ds-nav-group">Components</div>
+      <a class="ds-nav-item" href="#buttons">Buttons</a>
+      <a class="ds-nav-item" href="#inputs">Inputs</a>
+      <a class="ds-nav-item" href="#badges">Badges &amp; Tags</a>
+      <a class="ds-nav-item" href="#cards">Cards</a>
+      <a class="ds-nav-item" href="#navbar">NavBar</a>
+      <a class="ds-nav-item" href="#avatars">Avatars</a>
+      <a class="ds-nav-item" href="#feedback">Feedback</a>
+      <a class="ds-nav-item" href="#dropdown">Dropdown</a>
+      <a class="ds-nav-item" href="#dialog">Dialog</a>
+      <a class="ds-nav-item" href="#tabs">Tabs</a>
+      <div class="ds-nav-group">Patterns</div>
+      <a class="ds-nav-item" href="#form">Form</a>
+      <a class="ds-nav-item" href="#empty">Empty States</a>
+      <a class="ds-nav-item" href="#skeleton">Skeleton</a>
+      <a class="ds-nav-item" href="#data">Data / Stats</a>
+      <a class="ds-nav-item" href="#misc">Misc</a>
+    </nav>
+  </aside>
+
+  <!-- ════════ MAIN ════════ -->
+  <main class="main" style="flex:1; min-width:0; padding:48px 56px 96px; max-width:1000px;">
+
+    <!-- Masthead -->
+    <header class="masthead-anim" style="margin-bottom:56px;">
+      <div style="font-family:var(--font-mono); font-size:11px; font-weight:500; letter-spacing:.06em; text-transform:uppercase; color:var(--accent-deep); margin-bottom:16px;">Design System · v2</div>
+      <h1 class="display" style="font-size:clamp(40px,6vw,68px); font-weight:600; margin:0 0 14px; line-height:1.02;">Components, end&nbsp;to&nbsp;end.</h1>
+      <p style="font-size:15px; color:var(--muted); margin:0; max-width:60ch; line-height:1.7;">Every component, every state — the building blocks behind pioHub. Approve this, then we ship it page by page.</p>
+    </header>
+
+    <!-- ─── COLOR TOKENS ─── -->
+    <section id="tokens" class="reveal" style="margin-bottom:64px;">
+      <div class="ds-label">Color Tokens</div>
+      <div class="ds-card">
+        <div id="swatch-container" style="display:flex;flex-wrap:wrap;gap:22px;"></div>
+
+        <!-- Tonal accents -->
+        <div style="margin-top:28px; padding-top:22px; border-top:1px solid var(--border);">
+          <div class="micro">Tonal accents</div>
+          <div style="display:flex; flex-wrap:wrap; gap:12px;">
+            <div style="width:148px;height:50px;border-radius:12px;background:var(--accent);"></div>
+            <div style="width:148px;height:50px;border-radius:12px;background:var(--accent-deep);"></div>
+            <div style="width:148px;height:50px;border-radius:12px;background:var(--accent-soft);"></div>
+            <div style="width:148px;height:50px;border-radius:12px;background:var(--ink);"></div>
+            <div style="width:148px;height:50px;border-radius:12px;background:var(--surface-2);border:1px solid var(--border);"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── TYPOGRAPHY ─── -->
+    <section id="typography" class="reveal" style="margin-bottom:64px;">
+      <div class="ds-label">Typography</div>
+      <div class="ds-card" style="display:flex;flex-direction:column;gap:22px;">
+        <div>
+          <div class="micro">Display / Fraunces 600 — Hero</div>
+          <div class="display" style="font-size:52px;font-weight:600;line-height:1.0;">Build something real.</div>
+        </div>
+        <div class="sep-h"></div>
+        <div>
+          <div class="micro">Fraunces 600 — Section heading</div>
+          <div class="display" style="font-size:34px;font-weight:600;line-height:1.1;">Open Projects</div>
+        </div>
+        <div class="sep-h"></div>
+        <div>
+          <div class="micro">Fraunces 500 — Page title</div>
+          <div class="display" style="font-size:25px;font-weight:500;">Post a Project</div>
+        </div>
+        <div class="sep-h"></div>
+        <div>
+          <div class="micro">Manrope 600 — Card title</div>
+          <div style="font-family:var(--font-ui);font-size:16px;font-weight:600;color:var(--ink);">AI study-buddy for lecture notes</div>
+        </div>
+        <div class="sep-h"></div>
+        <div>
+          <div class="micro">Manrope 400 — Body</div>
+          <div style="font-family:var(--font-ui);font-size:14px;color:var(--muted);line-height:1.7;max-width:65ch;text-wrap:pretty;">Uploads a lecture transcript and generates flashcards, quiz questions, and a visual concept map automatically. Works with any subject.</div>
+        </div>
+        <div class="sep-h"></div>
+        <div style="display:flex;gap:36px;flex-wrap:wrap;">
+          <div>
+            <div class="micro">Manrope 500 12px — Caption</div>
+            <div style="font-family:var(--font-ui);font-size:12px;font-weight:500;color:var(--muted);">by Maya Kowalski · 2h ago</div>
+          </div>
+          <div>
+            <div class="micro">JetBrains Mono — Label</div>
+            <div style="font-family:var(--font-mono);font-size:11px;font-weight:500;letter-spacing:.04em;text-transform:uppercase;color:var(--accent-deep);">The process</div>
+          </div>
+          <div>
+            <div class="micro">Manrope — Link</div>
+            <div style="font-family:var(--font-ui);font-size:14px;color:var(--accent-deep);font-weight:600;text-decoration:underline;text-underline-offset:3px;cursor:pointer;">Browse all projects →</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── BUTTONS ─── -->
+    <section id="buttons" class="reveal" style="margin-bottom:64px;">
+      <div class="ds-label">Buttons</div>
+      <div class="ds-card" style="display:flex;flex-direction:column;gap:24px;">
+        <div>
+          <div class="micro">Variants</div>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;">
+            <button class="btn btn-default btn-md">Start building →</button>
+            <button class="btn btn-outline btn-md">Browse projects</button>
+            <button class="btn btn-secondary btn-md">Save changes</button>
+            <button class="btn btn-ghost btn-md">Cancel</button>
+            <button class="btn btn-destructive btn-md">Delete project</button>
+          </div>
+        </div>
+        <div class="sep-h"></div>
+        <div>
+          <div class="micro">Sizes</div>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;">
+            <button class="btn btn-default btn-sm">Post project</button>
+            <button class="btn btn-default btn-md">Post project</button>
+            <button class="btn btn-default btn-lg">Post project</button>
+          </div>
+        </div>
+        <div class="sep-h"></div>
+        <div>
+          <div class="micro">With icons</div>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;">
+            <button class="btn btn-default btn-md">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="#221E1A" stroke-width="2" stroke-linecap="round"/></svg>
+              New Project
+            </button>
+            <button class="btn btn-outline btn-md">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 2h10v10H2z" stroke="#221E1A" stroke-width="1.5" stroke-linejoin="round"/><path d="M5 7h4M7 5v4" stroke="#221E1A" stroke-width="1.5" stroke-linecap="round"/></svg>
+              Dashboard
+            </button>
+            <button class="btn btn-ghost btn-md btn-icon" title="Refresh">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 8A5.5 5.5 0 1 1 8 2.5" stroke="#6E665E" stroke-width="1.5" stroke-linecap="round"/><path d="M8 1v3.5L11 3" stroke="#6E665E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="sep-h"></div>
+        <div>
+          <div class="micro">States</div>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;">
+            <button class="btn btn-default btn-md">Normal</button>
+            <button class="btn btn-default btn-md" style="opacity:.45;pointer-events:none;">Disabled</button>
+            <button class="btn btn-default btn-md" style="pointer-events:none;">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="animation:spin 1s linear infinite"><path d="M7 1a6 6 0 1 0 6 6" stroke="#221E1A" stroke-width="2" stroke-linecap="round"/></svg>
+              Loading…
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── INPUTS ─── -->
+    <section id="inputs" class="reveal" style="margin-bottom:64px;">
+      <div class="ds-label">Inputs</div>
+      <div class="ds-card" style="display:flex;flex-direction:column;gap:20px;max-width:540px;">
+        <div>
+          <label class="form-label">Project title <span style="color:var(--destructive);">*</span></label>
+          <input class="inp" placeholder="e.g. AI-powered study planner" />
+          <div class="form-hint">Keep it clear and specific — this is the first thing people see.</div>
+        </div>
+        <div>
+          <label class="form-label">Description <span style="color:var(--destructive);">*</span></label>
+          <textarea class="inp" placeholder="What problem does it solve? What stage are you at?"></textarea>
+          <div style="display:flex;justify-content:space-between;margin-top:5px;">
+            <span class="form-hint">Be specific — vague projects get fewer requests.</span>
+            <span class="form-hint">0/5000</span>
+          </div>
+        </div>
+        <div>
+          <label class="form-label">Error state</label>
+          <input class="inp inp-error" value="x" />
+          <div class="form-error">Title must be at least 3 characters.</div>
+        </div>
+        <div>
+          <label class="form-label">Disabled</label>
+          <input class="inp inp-disabled" value="Read-only content" disabled />
+        </div>
+        <div>
+          <label class="form-label">Search</label>
+          <div style="position:relative;">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="position:absolute;left:13px;top:50%;transform:translateY(-50%);"><circle cx="6" cy="6" r="4.5" stroke="#968D83" stroke-width="1.5"/><path d="M10 10l2.5 2.5" stroke="#968D83" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <input class="inp" style="padding-left:35px;" placeholder="Search projects…" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── BADGES & ROLE TAGS ─── -->
+    <section id="badges" class="reveal" style="margin-bottom:64px;">
+      <div class="ds-label">Badges &amp; Role Tags</div>
+      <div class="ds-card" style="display:flex;flex-direction:column;gap:24px;">
+
+        <div>
+          <div class="micro">Badges — semantic states</div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;">
+            <span class="badge" style="background:var(--accent-soft);color:var(--accent-deep);">Default</span>
+            <span class="badge" style="background:#E6F5EC;color:#1F7A4D;border-color:#C8E9D6;">
+              <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><circle cx="4" cy="4" r="3" fill="#2BA76A"/></svg>
+              3 spots open
+            </span>
+            <span class="badge" style="background:#FBF1DC;color:#8A5A12;border-color:#F0E0B8;">1 spot left</span>
+            <span class="badge" style="background:#FCE7F0;color:#B23A6E;border-color:#F6CBDD;">Full</span>
+            <span class="badge" style="background:var(--destructive-soft);color:var(--destructive);border-color:var(--destructive-bd);">Error</span>
+            <span class="badge" style="background:var(--surface-2);color:var(--muted);border-color:var(--border);">Contacted</span>
+            <span class="badge" style="background:#E5F0FC;color:#2563B0;border-color:#C5DDF5;">Signed up</span>
+            <span class="badge" style="background:#E6F5EC;color:#1F7A4D;border-color:#C8E9D6;">Posted</span>
+          </div>
+        </div>
+
+        <div class="sep-h"></div>
+
+        <div>
+          <div class="micro">Role Tags — ProjectCard, ProjectForm, Feed filters</div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            <span class="role-tag" style="background:#E5F0FC;color:#2563B0;border-color:#C5DDF5;">⚡ Frontend</span>
+            <span class="role-tag" style="background:#EFEAFB;color:#6D4FCB;border-color:#DCD2F4;">🔧 Backend</span>
+            <span class="role-tag" style="background:#FCE7F0;color:#B23A6E;border-color:#F6CBDD;">🎨 Designer</span>
+            <span class="role-tag" style="background:#E6F5EC;color:#1F7A4D;border-color:#C8E9D6;">📊 Data Science</span>
+            <span class="role-tag" style="background:var(--accent-soft);color:var(--accent-deep);border-color:#F6D3C6;">☁️ DevOps</span>
+            <span class="role-tag" style="background:#E2F4F4;color:#138080;border-color:#C2E8E8;">📱 Mobile</span>
+            <span class="role-tag" style="background:#FBF1DC;color:#8A5A12;border-color:#F0E0B8;">🗺️ PM</span>
+            <span class="role-tag" style="background:#EFEAFB;color:#5B43B0;border-color:#DCD2F4;">🔬 Research</span>
+            <span class="role-tag" style="background:#FCE7F0;color:#9D2B5C;border-color:#F6CBDD;">✍️ Marketing</span>
+            <span class="role-tag" style="background:#E6F5EC;color:#1F7A4D;border-color:#C8E9D6;">🤖 ML</span>
+            <span class="role-tag" style="background:#E5F0FC;color:#3457A8;border-color:#C5DDF5;">📐 UI/UX</span>
+          </div>
+        </div>
+
+        <div class="sep-h"></div>
+
+        <div>
+          <div class="micro">Role Tag — with remove button (ProjectForm tag input)</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;">
+            <span style="display:inline-flex;align-items:center;gap:5px;background:var(--accent-soft);color:var(--accent-deep);border:1px solid #F6D3C6;border-radius:var(--r-full);font-size:11px;font-weight:600;font-family:var(--font-ui);padding:3px 11px;">
+              Frontend
+              <button style="background:none;border:none;cursor:pointer;color:var(--accent-deep);display:flex;padding:0;" title="Remove">
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 2l6 6M8 2l-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </button>
+            </span>
+            <span style="display:inline-flex;align-items:center;gap:5px;background:var(--accent-soft);color:var(--accent-deep);border:1px solid #F6D3C6;border-radius:var(--r-full);font-size:11px;font-weight:600;font-family:var(--font-ui);padding:3px 11px;">
+              Designer
+              <button style="background:none;border:none;cursor:pointer;color:var(--accent-deep);display:flex;padding:0;">
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 2l6 6M8 2l-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </button>
+            </span>
+          </div>
+        </div>
+
+        <div class="sep-h"></div>
+
+        <div>
+          <div class="micro">Filter pills (Feed page — role filter buttons)</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;">
+            <button style="padding:6px 15px;border-radius:var(--r-full);font-size:12px;font-weight:600;font-family:var(--font-ui);background:var(--ink);color:#fff;border:1.5px solid var(--ink);cursor:pointer;">Frontend</button>
+            <button style="padding:6px 15px;border-radius:var(--r-full);font-size:12px;font-weight:600;font-family:var(--font-ui);background:var(--surface);color:var(--muted);border:1.5px solid var(--border);cursor:pointer;">Backend</button>
+            <button style="padding:6px 15px;border-radius:var(--r-full);font-size:12px;font-weight:600;font-family:var(--font-ui);background:var(--surface);color:var(--muted);border:1.5px solid var(--border);cursor:pointer;">Designer</button>
+            <button style="padding:6px 15px;border-radius:var(--r-full);font-size:12px;font-weight:600;font-family:var(--font-ui);background:var(--surface);color:var(--muted);border:1.5px solid var(--border);cursor:pointer;">Data Science</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── CARDS ─── -->
+    <section id="cards" class="reveal" style="margin-bottom:64px;">
+      <div class="ds-label">Cards</div>
+      <div class="ds-card" style="display:flex;flex-direction:column;gap:24px;">
+
+        <div>
+          <div class="micro">ProjectCard — default + hover states side by side</div>
+          <div class="two-col" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:660px;">
+
+            <!-- Default -->
+            <div class="project-card">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
+                <h3 style="font-family:var(--font-ui);font-size:15px;font-weight:600;color:var(--ink);line-height:1.3;margin:0;">AI study-buddy for lecture notes</h3>
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0;margin-top:3px;"><path d="M2 7h10M8 3l4 4-4 4" stroke="#968D83" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:11px;">
+                <span style="font-size:11px;color:var(--faint);font-family:var(--font-ui);">by Maya K.</span>
+                <span style="font-size:11px;color:var(--faint);font-family:var(--font-ui);">2h ago</span>
+              </div>
+              <p style="font-size:12.5px;color:var(--muted);line-height:1.6;margin:0 0 12px;font-family:var(--font-ui);">Uploads a lecture transcript → generates flashcards and quiz questions automatically.</p>
+              <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:11px;">
+                <span class="role-tag" style="font-size:10px;background:#EFEAFB;color:#6D4FCB;border-color:#DCD2F4;padding:2px 9px;">Backend</span>
+                <span class="role-tag" style="font-size:10px;background:#FCE7F0;color:#B23A6E;border-color:#F6CBDD;padding:2px 9px;">Designer</span>
+                <span class="role-tag" style="font-size:10px;background:#E6F5EC;color:#1F7A4D;border-color:#C8E9D6;padding:2px 9px;">ML</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--faint);font-family:var(--font-ui);">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="4" r="2" stroke="#968D83" stroke-width="1.2"/><path d="M2 10c0-2.21 1.79-4 4-4s4 1.79 4 4" stroke="#968D83" stroke-width="1.2" stroke-linecap="round"/></svg>
+                1 / 5 members
+              </div>
+            </div>
+
+            <!-- Hovered -->
+            <div class="project-card" style="border-color:var(--accent);box-shadow:var(--sh-md);transform:translateY(-3px);">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
+                <h3 style="font-family:var(--font-ui);font-size:15px;font-weight:600;color:var(--accent-deep);line-height:1.3;margin:0;">Campus food waste tracker</h3>
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0;margin-top:3px;"><path d="M2 7h10M8 3l4 4-4 4" stroke="#C24A28" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:11px;">
+                <span style="font-size:11px;color:var(--faint);font-family:var(--font-ui);">by James R.</span>
+                <span style="font-size:11px;color:var(--faint);font-family:var(--font-ui);">5h ago</span>
+              </div>
+              <p style="font-size:12.5px;color:var(--muted);line-height:1.6;margin:0 0 12px;font-family:var(--font-ui);">QR scanning at dining halls, real-time dashboards for facilities staff. Partnering with 2 unis.</p>
+              <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:11px;">
+                <span class="role-tag" style="font-size:10px;background:#E5F0FC;color:#2563B0;border-color:#C5DDF5;padding:2px 9px;">Frontend</span>
+                <span class="role-tag" style="font-size:10px;background:var(--accent-soft);color:var(--accent-deep);border-color:#F6D3C6;padding:2px 9px;">DevOps</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--faint);font-family:var(--font-ui);">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="4" r="2" stroke="#968D83" stroke-width="1.2"/><path d="M2 10c0-2.21 1.79-4 4-4s4 1.79 4 4" stroke="#968D83" stroke-width="1.2" stroke-linecap="round"/></svg>
+                2 / 4 members
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sep-h"></div>
+
+        <!-- Stat tiles -->
+        <div>
+          <div class="micro">Stat Tiles — Admin / Dashboard</div>
+          <div style="display:flex;flex-wrap:wrap;gap:12px;">
+            <div class="stat-tile" style="min-width:130px;">
+              <div style="font-family:var(--font-mono);font-size:9px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Signups / wk</div>
+              <div class="display" style="font-size:30px;font-weight:600;color:var(--ink);line-height:1;">24</div>
+              <div style="font-size:10px;color:#1F7A4D;font-family:var(--font-ui);font-weight:600;margin-top:4px;">▲ 6 vs last week</div>
+            </div>
+            <div class="stat-tile" style="min-width:130px;border-color:#F6D3C6;background:var(--accent-soft);">
+              <div style="font-family:var(--font-mono);font-size:9px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-deep);margin-bottom:6px;">Activation</div>
+              <div class="display" style="font-size:30px;font-weight:600;color:var(--ink);line-height:1;">68%</div>
+              <div style="font-size:10px;color:var(--muted);font-family:var(--font-ui);margin-top:4px;">post/req in 7d</div>
+            </div>
+            <div class="stat-tile" style="min-width:130px;background:var(--ink);border-color:var(--ink);">
+              <div style="font-family:var(--font-mono);font-size:9px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:6px;">Teams formed</div>
+              <div class="display" style="font-size:30px;font-weight:600;color:#fff;line-height:1;">41</div>
+              <div style="font-size:10px;color:rgba(255,255,255,.55);font-family:var(--font-ui);margin-top:4px;">≥1 teammate</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── NAVBAR ─── -->
+    <section id="navbar" class="reveal" style="margin-bottom:64px;">
+      <div class="ds-label">NavBar</div>
+      <div class="ds-card" style="display:flex;flex-direction:column;gap:20px;padding:0;overflow:hidden;">
+
+        <!-- Authenticated -->
+        <div>
+          <div class="micro" style="padding:18px 22px 8px;margin:0;">Authenticated</div>
+          <div class="nav-demo" style="padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:62px;">
+            <div style="display:flex;align-items:center;gap:9px;">
+              <div style="width:28px;height:28px;border-radius:8px;background:var(--accent);display:flex;align-items:center;justify-content:center;">
+                <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M3 13V8.5M8 13V3M13 13V6" stroke="#221E1A" stroke-width="2.2" stroke-linecap="round"/></svg>
+              </div>
+              <span style="font-family:var(--font-display);font-weight:600;font-size:17px;color:var(--ink);">pioHub</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:4px;">
+              <a class="nav-link" href="#navbar">Browse Projects</a>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <button class="btn btn-outline btn-sm" style="gap:5px;">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="#221E1A" stroke-width="1.5" stroke-linecap="round"/></svg>
+                New Project
+              </button>
+              <div style="width:34px;height:34px;border-radius:var(--r-full);background:var(--ink);display:flex;align-items:center;justify-content:center;font-family:var(--font-ui);font-size:12px;font-weight:700;color:#fff;border:2px solid var(--border);cursor:pointer;">MK</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Unauthenticated -->
+        <div>
+          <div class="micro" style="padding:0 22px 8px;margin:0;">Unauthenticated</div>
+          <div class="nav-demo" style="padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:62px;">
+            <div style="display:flex;align-items:center;gap:9px;">
+              <div style="width:28px;height:28px;border-radius:8px;background:var(--accent);display:flex;align-items:center;justify-content:center;">
+                <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M3 13V8.5M8 13V3M13 13V6" stroke="#221E1A" stroke-width="2.2" stroke-linecap="round"/></svg>
+              </div>
+              <span style="font-family:var(--font-display);font-weight:600;font-size:17px;color:var(--ink);">pioHub</span>
+            </div>
+            <a class="nav-link" href="#navbar">Browse Projects</a>
+            <button class="btn btn-default btn-sm">Sign in</button>
+          </div>
+        </div>
+
+        <!-- Active link state -->
+        <div>
+          <div class="micro" style="padding:0 22px 8px;margin:0;">Active link state</div>
+          <div class="nav-demo" style="padding:0 24px;display:flex;align-items:center;gap:6px;height:62px;">
+            <a class="nav-link active" href="#navbar">Browse Projects</a>
+            <a class="nav-link" href="#navbar">Dashboard</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── AVATARS ─── -->
+    <section id="avatars" class="reveal" style="margin-bottom:64px;">
+      <div class="ds-label">Avatars</div>
+      <div class="ds-card" style="display:flex;flex-direction:column;gap:20px;">
+        <div style="display:flex;flex-wrap:wrap;gap:18px;align-items:flex-end;">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:7px;">
+            <div class="avatar-ring" style="width:48px;height:48px;font-size:16px;">MK</div>
+            <span class="micro" style="margin:0;">lg</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:7px;">
+            <div class="avatar-ring" style="width:36px;height:36px;font-size:12px;">JR</div>
+            <span class="micro" style="margin:0;">md</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:7px;">
+            <div class="avatar-ring" style="width:26px;height:26px;font-size:9px;">PS</div>
+            <span class="micro" style="margin:0;">sm</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:7px;">
+            <div style="display:flex;">
+              <div class="avatar-ring" style="width:32px;height:32px;font-size:11px;">MK</div>
+              <div class="avatar-ring" style="width:32px;height:32px;font-size:11px;margin-left:-9px;background:var(--accent);color:var(--ink);">JR</div>
+              <div class="avatar-ring" style="width:32px;height:32px;font-size:11px;margin-left:-9px;background:#1F7A4D;">PS</div>
+              <div class="avatar-ring" style="width:32px;height:32px;font-size:10px;margin-left:-9px;background:var(--surface-2);color:var(--accent-deep);">+4</div>
+            </div>
+            <span class="micro" style="margin:0;">stack</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── FEEDBACK ─── -->
+    <section id="feedback" class="reveal" style="margin-bottom:64px;">
+      <div class="ds-label">Feedback — Toasts &amp; Alerts</div>
+      <div class="ds-card" style="display:flex;flex-direction:column;gap:14px;">
+
+        <div class="toast" style="border-color:#C8E9D6;">
+          <div style="width:18px;height:18px;border-radius:var(--r-full);background:#E6F5EC;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5.5l2 2 4-4" stroke="#1F7A4D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div>
+            <div style="font-family:var(--font-ui);font-size:13px;font-weight:600;color:var(--ink);">Project created!</div>
+            <div style="font-family:var(--font-ui);font-size:12px;color:var(--muted);margin-top:2px;">Share it with the community.</div>
+          </div>
+        </div>
+
+        <div class="toast" style="border-color:var(--destructive-bd);">
+          <div style="width:18px;height:18px;border-radius:var(--r-full);background:var(--destructive-soft);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 2l6 6M8 2l-6 6" stroke="#D23B2E" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div>
+            <div style="font-family:var(--font-ui);font-size:13px;font-weight:600;color:var(--ink);">Failed to update project</div>
+            <div style="font-family:var(--font-ui);font-size:12px;color:var(--muted);margin-top:2px;">Check your connection and try again.</div>
+          </div>
+        </div>
+
+        <div class="toast">
+          <div style="width:18px;height:18px;border-radius:var(--r-full);background:var(--accent-soft);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="4" stroke="#C24A28" stroke-width="1.2"/><path d="M5 4.5v3M5 3h.01" stroke="#C24A28" stroke-width="1.2" stroke-linecap="round"/></svg>
+          </div>
+          <div>
+            <div style="font-family:var(--font-ui);font-size:13px;font-weight:600;color:var(--ink);">Invite link copied</div>
+            <div style="font-family:var(--font-ui);font-size:12px;color:var(--muted);margin-top:2px;">Send it to anyone you want to recruit.</div>
+          </div>
+        </div>
+
+        <!-- Inline alert -->
+        <div style="background:#FBF1DC;border:1px solid #F0E0B8;border-radius:var(--r-lg);padding:13px 16px;display:flex;gap:11px;align-items:flex-start;">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="flex-shrink:0;margin-top:1px;"><path d="M8 2L15 14H1L8 2z" stroke="#8A5A12" stroke-width="1.5" stroke-linejoin="round"/><path d="M8 7v3M8 11.5h.01" stroke="#8A5A12" stroke-width="1.5" stroke-linecap="round"/></svg>
+          <div style="font-family:var(--font-ui);font-size:12px;color:#7A4F10;line-height:1.55;">Your project has been open for 14 days with no requests. Consider updating the description or adding more roles.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── DROPDOWN ─── -->
+    <section id="dropdown" class="reveal" style="margin-bottom:64px;">
+      <div class="ds-label">Dropdown Menu</div>
+      <div class="ds-card" style="display:flex;gap:32px;flex-wrap:wrap;">
+        <div>
+          <div class="micro">User menu</div>
+          <div class="dropdown">
+            <div style="padding:10px 12px 8px;border-bottom:1px solid var(--border);margin-bottom:5px;">
+              <div style="font-family:var(--font-ui);font-size:13px;font-weight:600;color:var(--ink);">Maya Kowalski</div>
+              <div style="font-family:var(--font-ui);font-size:11px;color:var(--muted);">maya@stanford.edu</div>
+            </div>
+            <div class="dropdown-item">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="12" height="12" rx="3" stroke="currentColor" stroke-width="1.2"/><path d="M4 7h6M7 4v6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+              Dashboard
+            </div>
+            <div class="dropdown-item">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 11V3M12 11V7M7 11V5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+              Analytics
+            </div>
+            <div class="dropdown-sep"></div>
+            <div class="dropdown-item danger">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M10 4l-6 6M4 4l6 6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+              Sign out
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── DIALOG ─── -->
+    <section id="dialog" class="reveal" style="margin-bottom:64px;">
+      <div class="ds-label">Dialog / Modal</div>
+      <div class="ds-card">
+        <div class="micro">Confirm delete dialog</div>
+        <div class="dialog-box" style="position:relative;max-width:420px;">
+          <button style="position:absolute;top:18px;right:18px;background:none;border:none;cursor:pointer;color:var(--faint);padding:4px;border-radius:6px;">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+          <div style="width:42px;height:42px;border-radius:var(--r-lg);background:var(--destructive-soft);display:flex;align-items:center;justify-content:center;margin-bottom:16px;">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 5h12M7 5V3h4v2M8 8v5M10 8v5M5 5l.5 10h7L13 5" stroke="#D23B2E" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="display" style="font-size:20px;font-weight:600;color:var(--ink);margin-bottom:8px;">Delete project?</div>
+          <div style="font-family:var(--font-ui);font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:22px;">This will permanently remove “AI study-buddy” and all its join requests. This can’t be undone.</div>
+          <div style="display:flex;gap:8px;justify-content:flex-end;">
+            <button class="btn btn-outline btn-sm">Cancel</button>
+            <button class="btn btn-destructive btn-sm">Delete project</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── TABS ─── -->
+    <section id="tabs" class="reveal" style="margin-bottom:64px;">
+      <div class="ds-label">Tabs</div>
+      <div class="ds-card" style="display:flex;flex-direction:column;gap:16px;">
+        <div>
+          <div class="micro">Dashboard tabs</div>
+          <div class="tabs-list" id="tab-demo">
+            <button class="tab-trigger active" onclick="switchTab(this,'my-projects')">My Projects</button>
+            <button class="tab-trigger" onclick="switchTab(this,'teams')">Teams I'm On</button>
+            <button class="tab-trigger" onclick="switchTab(this,'requests')">Requests</button>
+          </div>
+          <div style="margin-top:16px;padding:18px;background:var(--surface-2);border-radius:var(--r-lg);">
+            <div id="tab-my-projects" style="font-family:var(--font-ui);font-size:13px;color:var(--muted);">Showing your posted projects…</div>
+            <div id="tab-teams" style="font-family:var(--font-ui);font-size:13px;color:var(--muted);display:none;">Showing teams you've joined…</div>
+            <div id="tab-requests" style="font-family:var(--font-ui);font-size:13px;color:var(--muted);display:none;">Showing incoming join requests…</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── FORM ─── -->
+    <section id="form" class="reveal" style="margin-bottom:64px;">
+      <div class="ds-label">Form — ProjectForm pattern</div>
+      <div class="ds-card" style="max-width:540px;display:flex;flex-direction:column;gap:20px;">
+        <div>
+          <label class="form-label">Project title <span style="color:var(--destructive);">*</span></label>
+          <input class="inp" value="AI study-buddy for lecture notes" />
+        </div>
+        <div>
+          <label class="form-label">Description <span style="color:var(--destructive);">*</span></label>
+          <textarea class="inp" rows="4">Uploads a lecture transcript → generates flashcards, quiz questions, and a visual concept map automatically.</textarea>
+          <div style="display:flex;justify-content:space-between;margin-top:5px;">
+            <span></span><span class="form-hint">112/5000</span>
+          </div>
+        </div>
+        <div>
+          <label class="form-label">Needed roles <span style="color:var(--destructive);">*</span></label>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;min-height:46px;border-radius:var(--r-md);border:1.5px solid var(--accent);box-shadow:0 0 0 3px var(--accent-ring);background:var(--surface);padding:9px 12px;align-items:center;">
+            <span style="display:inline-flex;align-items:center;gap:5px;background:var(--accent-soft);color:var(--accent-deep);border:1px solid #F6D3C6;border-radius:var(--r-full);font-size:11px;font-weight:600;font-family:var(--font-ui);padding:3px 11px;">Backend <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 2l6 6M8 2l-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+            <span style="display:inline-flex;align-items:center;gap:5px;background:var(--accent-soft);color:var(--accent-deep);border:1px solid #F6D3C6;border-radius:var(--r-full);font-size:11px;font-weight:600;font-family:var(--font-ui);padding:3px 11px;">Designer <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 2l6 6M8 2l-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+            <input style="border:none;outline:none;font-size:13px;font-family:var(--font-ui);color:var(--ink);min-width:100px;background:transparent;" placeholder="Add more…"/>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:9px;">
+            <span style="font-size:11px;color:var(--faint);font-family:var(--font-ui);align-self:center;">Suggestions:</span>
+            <button style="padding:3px 11px;border-radius:var(--r-full);font-size:11px;font-weight:600;font-family:var(--font-ui);background:var(--surface);color:var(--muted);border:1.5px dashed var(--border);cursor:pointer;">+ ML</button>
+            <button style="padding:3px 11px;border-radius:var(--r-full);font-size:11px;font-weight:600;font-family:var(--font-ui);background:var(--surface);color:var(--muted);border:1.5px dashed var(--border);cursor:pointer;">+ Frontend</button>
+            <button style="padding:3px 11px;border-radius:var(--r-full);font-size:11px;font-weight:600;font-family:var(--font-ui);background:var(--surface);color:var(--muted);border:1.5px dashed var(--border);cursor:pointer;">+ DevOps</button>
+          </div>
+        </div>
+        <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-lg);padding:15px 16px;">
+          <div style="font-family:var(--font-mono);font-size:9px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:9px;">Role preview</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;">
+            <span class="role-tag" style="font-size:10px;background:#EFEAFB;color:#6D4FCB;border-color:#DCD2F4;padding:2px 9px;">Backend</span>
+            <span class="role-tag" style="font-size:10px;background:#FCE7F0;color:#B23A6E;border-color:#F6CBDD;padding:2px 9px;">Designer</span>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;padding-top:4px;">
+          <button class="btn btn-default btn-md" style="flex:1;max-width:180px;">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="#221E1A" stroke-width="2" stroke-linecap="round"/></svg>
+            Post Project
+          </button>
+          <button class="btn btn-outline btn-md">Cancel</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── EMPTY STATES ─── -->
+    <section id="empty" class="reveal" style="margin-bottom:64px;">
+      <div class="ds-label">Empty States</div>
+      <div class="ds-card two-col" style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+
+        <div style="background:var(--surface-2);border:1px dashed var(--border);border-radius:var(--r-2xl);padding:30px;text-align:center;">
+          <div class="empty-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 3v18M3 12h18" stroke="#968D83" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div style="font-family:var(--font-ui);font-size:15px;font-weight:600;color:var(--ink);margin-bottom:6px;">No projects yet</div>
+          <div style="font-family:var(--font-ui);font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.5;">Be the first to post a project and find your team.</div>
+          <button class="btn btn-default btn-sm">Post the first project</button>
+        </div>
+
+        <div style="background:var(--surface-2);border:1px dashed var(--border);border-radius:var(--r-2xl);padding:30px;text-align:center;">
+          <div class="empty-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#968D83" stroke-width="1.5"/><path d="M4 20c0-4 3.58-7 8-7s8 3 8 7" stroke="#968D83" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div style="font-family:var(--font-ui);font-size:15px;font-weight:600;color:var(--ink);margin-bottom:6px;">No contacts yet</div>
+          <div style="font-family:var(--font-ui);font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.5;">Add the first person you're reaching out to above.</div>
+          <button class="btn btn-outline btn-sm">Add a contact</button>
+        </div>
+
+        <!-- 404 -->
+        <div style="background:var(--surface-2);border:1px dashed var(--border);border-radius:var(--r-2xl);padding:30px;text-align:center;grid-column:span 2;">
+          <div class="display" style="font-size:56px;font-weight:600;color:var(--accent);margin-bottom:8px;line-height:1;">404</div>
+          <div style="font-family:var(--font-ui);font-size:16px;font-weight:600;color:var(--ink);margin-bottom:6px;">Page not found</div>
+          <div style="font-family:var(--font-ui);font-size:12px;color:var(--muted);margin-bottom:16px;">The page you're looking for doesn't exist.</div>
+          <button class="btn btn-default btn-sm">Go home</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── SKELETON ─── -->
+    <section id="skeleton" class="reveal" style="margin-bottom:64px;">
+      <div class="ds-label">Skeleton / Loading</div>
+      <div class="ds-card two-col" style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r-2xl);padding:20px;display:flex;flex-direction:column;gap:11px;box-shadow:var(--sh-sm);">
+          <div class="skeleton" style="height:14px;width:75%;"></div>
+          <div class="skeleton" style="height:10px;width:40%;"></div>
+          <div class="skeleton" style="height:48px;width:100%;margin-top:4px;"></div>
+          <div style="display:flex;gap:6px;">
+            <div class="skeleton" style="height:20px;width:60px;border-radius:999px;"></div>
+            <div class="skeleton" style="height:20px;width:72px;border-radius:999px;"></div>
+          </div>
+          <div class="skeleton" style="height:10px;width:30%;"></div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:11px;">
+          <div class="skeleton" style="height:32px;width:50%;"></div>
+          <div class="skeleton" style="height:14px;width:80%;"></div>
+          <div class="skeleton" style="height:14px;width:65%;"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px;">
+            <div class="skeleton" style="height:80px;border-radius:12px;"></div>
+            <div class="skeleton" style="height:80px;border-radius:12px;"></div>
+            <div class="skeleton" style="height:80px;border-radius:12px;"></div>
+            <div class="skeleton" style="height:80px;border-radius:12px;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── DATA / STATS ─── -->
+    <section id="data" class="reveal" style="margin-bottom:64px;">
+      <div class="ds-label">Data Visualisation — Admin</div>
+      <div class="ds-card" style="display:flex;flex-direction:column;gap:22px;">
+
+        <div>
+          <div class="micro">Trend bars — signups last 14 days</div>
+          <div id="trend-bars" style="display:flex;align-items:flex-end;gap:5px;height:84px;"></div>
+        </div>
+
+        <div class="sep-h"></div>
+
+        <div>
+          <div class="micro">Breakdown list — universities</div>
+          <div id="breakdown-list" style="display:flex;flex-direction:column;gap:9px;max-width:420px;"></div>
+        </div>
+
+        <div class="sep-h"></div>
+
+        <div>
+          <div class="micro">Progress bar — team fill rate</div>
+          <div style="display:flex;flex-direction:column;gap:10px;max-width:420px;">
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:5px;">
+                <span style="font-family:var(--font-ui);font-size:12px;color:var(--ink);">AI study-buddy</span>
+                <span style="font-family:var(--font-ui);font-size:12px;font-weight:700;color:var(--accent-deep);">60%</span>
+              </div>
+              <div class="progress-track"><div class="progress-fill" style="width:60%;"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:5px;">
+                <span style="font-family:var(--font-ui);font-size:12px;color:var(--ink);">Food waste tracker</span>
+                <span style="font-family:var(--font-ui);font-size:12px;font-weight:700;color:var(--accent-deep);">40%</span>
+              </div>
+              <div class="progress-track"><div class="progress-fill" style="width:40%;"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:5px;">
+                <span style="font-family:var(--font-ui);font-size:12px;color:var(--ink);">Peer tutoring app</span>
+                <span style="font-family:var(--font-ui);font-size:12px;font-weight:700;color:var(--accent-deep);">80%</span>
+              </div>
+              <div class="progress-track"><div class="progress-fill" style="width:80%;"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── MISC ─── -->
+    <section id="misc" class="reveal" style="margin-bottom:64px;">
+      <div class="ds-label">Misc — Separator, Tooltip, Spacing</div>
+      <div class="ds-card" style="display:flex;flex-direction:column;gap:22px;">
+
+        <div>
+          <div class="micro">Separator</div>
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <div class="sep-h"></div>
+            <div style="display:flex;align-items:center;gap:12px;">
+              <div class="sep-h" style="flex:1;"></div>
+              <span style="font-family:var(--font-ui);font-size:11px;color:var(--faint);white-space:nowrap;">or continue with</span>
+              <div class="sep-h" style="flex:1;"></div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="micro">Tooltip</div>
+          <div style="display:inline-flex;flex-direction:column;align-items:center;gap:0;">
+            <div class="tooltip-box">project owner approves all requests</div>
+            <div style="width:7px;height:7px;background:var(--ink);transform:rotate(45deg);margin-top:-4px;margin-bottom:6px;"></div>
+            <button class="btn btn-outline btn-sm">Hover me</button>
+          </div>
+        </div>
+
+        <div>
+          <div class="micro">Spacing scale</div>
+          <div style="display:flex;gap:10px;align-items:flex-end;">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px;"><div style="width:4px;height:4px;background:var(--accent);border-radius:2px;"></div><span class="micro" style="margin:0;font-size:9px;">1</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px;"><div style="width:8px;height:8px;background:var(--accent);border-radius:2px;"></div><span class="micro" style="margin:0;font-size:9px;">2</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px;"><div style="width:12px;height:12px;background:var(--accent);border-radius:3px;"></div><span class="micro" style="margin:0;font-size:9px;">3</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px;"><div style="width:16px;height:16px;background:var(--accent);border-radius:3px;"></div><span class="micro" style="margin:0;font-size:9px;">4</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px;"><div style="width:20px;height:20px;background:var(--accent);border-radius:4px;"></div><span class="micro" style="margin:0;font-size:9px;">5</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px;"><div style="width:24px;height:24px;background:var(--accent);border-radius:5px;"></div><span class="micro" style="margin:0;font-size:9px;">6</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px;"><div style="width:32px;height:32px;background:var(--accent);border-radius:6px;"></div><span class="micro" style="margin:0;font-size:9px;">8</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px;"><div style="width:40px;height:40px;background:var(--accent);border-radius:8px;"></div><span class="micro" style="margin:0;font-size:9px;">10</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px;"><div style="width:48px;height:48px;background:var(--accent);border-radius:10px;"></div><span class="micro" style="margin:0;font-size:9px;">12</span></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="micro">Border radius scale</div>
+          <div style="display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap;">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:7px;"><div style="width:40px;height:40px;background:#F8D8CB;border-radius:6px;"></div><span class="micro" style="margin:0;font-size:9px;">sm/6</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:7px;"><div style="width:40px;height:40px;background:#F6C4B2;border-radius:10px;"></div><span class="micro" style="margin:0;font-size:9px;">md/10</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:7px;"><div style="width:40px;height:40px;background:#F2A88E;border-radius:12px;"></div><span class="micro" style="margin:0;font-size:9px;">lg/12</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:7px;"><div style="width:40px;height:40px;background:#EF8B69;border-radius:14px;"></div><span class="micro" style="margin:0;font-size:9px;">xl/14</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:7px;"><div style="width:40px;height:40px;background:var(--accent);border-radius:16px;"></div><span class="micro" style="margin:0;font-size:9px;">2xl/16</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:7px;"><div style="width:40px;height:40px;background:var(--accent-deep);border-radius:999px;"></div><span class="micro" style="margin:0;font-size:9px;">full</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+  // ── Color token swatches ──
+  const swatches = [
+    { hex:'#FBFAF8', name:'bg', role:'Page background' },
+    { hex:'#FFFFFF', name:'surface', role:'Card background' },
+    { hex:'#F4F1ED', name:'surface-2', role:'Inset / code' },
+    { hex:'#221E1A', name:'ink', role:'Headings + body' },
+    { hex:'#6E665E', name:'muted', role:'Secondary text' },
+    { hex:'#968D83', name:'faint', role:'Meta / tertiary' },
+    { hex:'#E8E3DD', name:'border', role:'Borders, dividers' },
+    { hex:'#EE6C45', name:'accent', role:'Brand fill, CTA' },
+    { hex:'#C24A28', name:'accent-deep', role:'Links, accent text' },
+    { hex:'#FBE6DD', name:'accent-soft', role:'Tint surfaces' },
+    { hex:'#D23B2E', name:'destructive', role:'Errors, delete' },
+  ];
+  const sc = document.getElementById('swatch-container');
+  swatches.forEach(s => {
+    const el = document.createElement('div');
+    el.style.cssText = 'display:flex;flex-direction:column;align-items:flex-start;gap:7px;width:122px;';
+    el.innerHTML = `
+      <div class="swatch" style="background:${s.hex};"></div>
+      <div style="font-family:var(--font-ui);font-size:12px;font-weight:700;color:var(--ink);">${s.name}</div>
+      <div style="font-family:var(--font-mono);font-size:10px;color:var(--muted);">${s.hex}</div>
+      <div style="font-family:var(--font-ui);font-size:10px;color:var(--faint);">${s.role}</div>`;
+    sc.appendChild(el);
+  });
+
+  // ── Tabs ──
+  function switchTab(btn, tab) {
+    document.querySelectorAll('#tab-demo .tab-trigger').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    ['my-projects','teams','requests'].forEach(id => {
+      document.getElementById('tab-' + id).style.display = id === tab ? 'block' : 'none';
+    });
+  }
+
+  // ── Trend bars ──
+  const trendData = [2,5,3,8,4,11,7,9,6,14,10,8,13,16];
+  const max = Math.max(...trendData);
+  const barsEl = document.getElementById('trend-bars');
+  trendData.forEach((v, i) => {
+    const isPeak = v === max;
+    barsEl.innerHTML += `
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;">
+        <div style="width:100%;border-radius:4px 4px 0 0;background:${isPeak ? 'var(--accent)' : '#F0C4B2'};height:${Math.max(6,(v/max)*100)}%;transition:height .4s cubic-bezier(.2,.8,.2,1);" title="Day ${i+1}: ${v}"></div>
+      </div>`;
+  });
+
+  // ── Breakdown list ──
+  const unis = [
+    { label:'Stanford', count:34 },
+    { label:'MIT', count:28 },
+    { label:'UCLA', count:22 },
+    { label:'UC Berkeley', count:19 },
+    { label:'NYU', count:11 },
+  ];
+  const bMax = Math.max(...unis.map(u => u.count));
+  const blEl = document.getElementById('breakdown-list');
+  unis.forEach(u => {
+    blEl.innerHTML += `
+      <div style="display:flex;align-items:center;gap:11px;">
+        <span style="width:92px;flex-shrink:0;font-family:var(--font-ui);font-size:12px;color:var(--ink);">${u.label}</span>
+        <div style="flex:1;height:8px;border-radius:999px;background:var(--surface-2);overflow:hidden;">
+          <div style="height:100%;width:${(u.count/bMax)*100}%;background:var(--accent);border-radius:999px;"></div>
+        </div>
+        <span style="width:28px;text-align:right;font-family:var(--font-ui);font-size:12px;font-weight:700;color:var(--muted);">${u.count}</span>
+      </div>`;
+  });
+
+  // ── Smooth-scroll + active nav ──
+  document.querySelectorAll('a.ds-nav-item[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior:'smooth', block:'start' });
+      document.querySelectorAll('.ds-nav-item').forEach(l => l.classList.remove('active'));
+      a.classList.add('active');
+    });
+  });
+
+  const sections = document.querySelectorAll('section[id]');
+  const navObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        document.querySelectorAll('.ds-nav-item').forEach(l => l.classList.remove('active'));
+        const link = document.querySelector(`.ds-nav-item[href="#${e.target.id}"]`);
+        if (link) link.classList.add('active');
+      }
+    });
+  }, { threshold: 0.35 });
+  sections.forEach(s => navObserver.observe(s));
+
+  // ── Reveal on scroll (enhancement only — content visible by default) ──
+  const motionOK = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (motionOK) {
+    document.body.classList.add('js-motion');
+    const revealObserver = new IntersectionObserver((entries, obs) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+    // Safety: if anything never fires (hidden tab / headless), show everything.
+    setTimeout(() => document.querySelectorAll('.reveal:not(.in)').forEach(el => el.classList.add('in')), 1600);
+  }
+</script>
+
+</body>
+</html>
